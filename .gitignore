@@ -121,3 +121,4 @@ dist
 .env.production.local
 .vscode
 .idea
+/sample

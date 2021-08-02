@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
-import Sign from './pages/Sign';
+import SelectNetwork from './pages/SelectNetwork';
+import EnterTransaction from './pages/EnterTransaction';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -25,23 +25,20 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 
 const App: React.FC = () => {
-  const [network, switchNetwork] = useState<string>("");
-  const setNetwork = (val:string) => {
-    switchNetwork(val);
-  }
+  const [networkIdentifire, setNetworkIdentifire] = useState<string>("");
 
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/home">
-            <Home setNetwork={setNetwork}/>
+          <Route exact path="/selectNetwork">
+            <SelectNetwork setNetworkIdentifire={setNetworkIdentifire}/>
           </Route>
-          <Route exact path="/sign">
-            <Sign network={network}/>
+          <Route exact path="/enterTransaction">
+            <EnterTransaction networkIdentifire={networkIdentifire}/>
           </Route>
           <Route exact path="/">
-            <Redirect to="/home" />
+            <Redirect to="/selectNetwork" />
           </Route>
         </IonRouterOutlet>
       </IonReactRouter>

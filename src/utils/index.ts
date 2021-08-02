@@ -1,47 +1,47 @@
-const fetch = require('node-fetch');
-const assetSchemas = require('./assetSchemas.json');
+import { assetSchemas } from './assetSchemas';
 
-const NETWORK = {
+export const NETWORK = {
   MAINNET: "0",
   TESTNET: "1"
 }
+
 const SERVICE_URL = {
   MAINNET: "",
   TESTNET: "https://testnet-service.lisk.io/api/v2"
 }
 
-const bigIntToString = (v) => {
+const bigIntToString = (v:any):string => {
   const result = typeof v === 'string'? v: v.toString();
   if (result.slice(-1) === 'n') return result;
   return result + 'n';
 }
 
-const getServiceURL = (network) => {
+export const getServiceURL = (network:string):string => {
   return network === NETWORK.MAINNET? SERVICE_URL.MAINNET: SERVICE_URL.TESTNET;
 }
 
-const getAssetSchema = (moduleAssetId) => {
-  const schemaInfo = assetSchemas[moduleAssetId];
+export const getAssetSchema = (moduleAssetId:string):any|undefined => {
+  const schemaInfo = assetSchemas.find((assetSchema) => assetSchema.moduleAssetId === moduleAssetId);
   return schemaInfo? schemaInfo.schema: undefined;
 }
 
-const getNetworkIdentifier = async (network) => {
+export const getNetworkIdentifier = async (network:string):Promise<string|undefined> => {
   const res = await fetch(`${getServiceURL(network)}/network/status`);
   const json = await res.json();
   return json.data? json.data.networkIdentifier: undefined;
 }
 
-const getAccount = async (network, publicKey) => {
+export const getAccount = async (network:string, publicKey:string):Promise<any|undefined> => {
   const res = await fetch(`${getServiceURL(network)}/accounts?publicKey=${publicKey}`);
   const json = await res.json();
   return json.data? json.data[0]: undefined;
 }
 
-const convertTransactionObject = (transactionObject) => {
+export const convertTransactionObject = (transactionObject:any) => {
   transactionObject.nonce = BigInt(transactionObject.nonce.replace('n',''));
   transactionObject.fee = BigInt(transactionObject.fee.replace('n',''));
   transactionObject.senderPublicKey = Buffer.from(transactionObject.senderPublicKey, 'hex');
-  transactionObject.signatures = transactionObject.signatures.map(signature => Buffer.from(signature, 'hex'));
+  transactionObject.signatures = transactionObject.signatures.map((signature:string) => Buffer.from(signature, 'hex'));
 
   switch(`${transactionObject.moduleID}:${transactionObject.assetID}`) {
     case '2:0':
@@ -51,7 +51,7 @@ const convertTransactionObject = (transactionObject) => {
 
     case '5:1':
     case '5:2':
-      transactionObject.asset.votes = transactionObject.asset.votes.map(vote => {
+      transactionObject.asset.votes = transactionObject.asset.votes.map((vote:any) => {
         return {
           delegateAddress: Buffer.from(vote.delegateAddress, 'hex'),
           amount: BigInt(vote.amount.replace('n',''))
@@ -61,14 +61,14 @@ const convertTransactionObject = (transactionObject) => {
   }
 }
 
-const convertSignedTransaction = (signedTransaction) => {
+export const convertSignedTransaction = (signedTransaction:any) => {
   console.log(bigIntToString("5n"))
   signedTransaction.id = Buffer.from(signedTransaction.id).toString('hex');
   signedTransaction.nonce = bigIntToString(signedTransaction.nonce);
   signedTransaction.fee = bigIntToString(signedTransaction.fee);
 
   signedTransaction.senderPublicKey = Buffer.from(signedTransaction.senderPublicKey).toString('hex');
-  signedTransaction.signatures = signedTransaction.signatures.map(signature => Buffer.from(signature).toString('hex'));
+  signedTransaction.signatures = signedTransaction.signatures.map((signature:string) => Buffer.from(signature).toString('hex'));
 
   switch(`${signedTransaction.moduleID}:${signedTransaction.assetID}`) {
     case '2:0':
@@ -78,7 +78,7 @@ const convertSignedTransaction = (signedTransaction) => {
 
     case '5:1':
     case '5:2':
-      signedTransaction.asset.votes = signedTransaction.asset.votes.map(vote => {
+      signedTransaction.asset.votes = signedTransaction.asset.votes.map((vote:any) => {
         return {
           delegateAddress: Buffer.from(vote.delegateAddress).toString('hex'),
           amount: bigIntToString(vote.amount)
@@ -86,12 +86,4 @@ const convertSignedTransaction = (signedTransaction) => {
       });
       break;
   }
-}
-
-module.exports = {
-  getAssetSchema,
-  getNetworkIdentifier,
-  getAccount,
-  convertTransactionObject,
-  convertSignedTransaction
 }

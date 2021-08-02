@@ -1,5 +1,5 @@
-{
-  "2:0": {
+export const assetSchemas = [
+  {
     "moduleAssetId": "2:0",
     "moduleAssetName": "token:transfer",
     "schema": {
@@ -31,7 +31,7 @@
       }
     }
   },
-  "5:0": {
+  {
     "moduleAssetId": "5:0",
     "moduleAssetName": "dpos:registerDelegate",
     "schema": {
@@ -50,7 +50,7 @@
       }
     }
   },
-  "5:1": {
+  {
     "moduleAssetId": "5:1",
     "moduleAssetName": "dpos:voteDelegate",
     "schema": {
@@ -88,7 +88,7 @@
       }
     }
   },
-  "5:2": {
+  {
     "moduleAssetId": "5:2",
     "moduleAssetName": "dpos:unlockToken",
     "schema": {
@@ -131,4 +131,4 @@
       }
     }
   }
-}
+]

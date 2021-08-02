@@ -1,16 +1,17 @@
 import { IonContent, IonLabel, IonPage } from '@ionic/react';
 import Header from '../components/Header';
+import './Common.css';
 
-const Sign: React.FC<{network:string}> = ({network}) => {
+const EnterTransaction: React.FC<{networkIdentifire:string}> = ({networkIdentifire}) => {
 
   return (
     <IonPage>
       <Header />
       <IonContent fullscreen>
-        <IonLabel>{network}</IonLabel>
+        <IonLabel>{networkIdentifire}</IonLabel>
       </IonContent>
     </IonPage>
   );
 };
 
-export default Sign;
+export default EnterTransaction;

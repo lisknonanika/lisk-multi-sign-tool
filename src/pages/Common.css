@@ -26,22 +26,6 @@
   text-decoration: none;
 }
 
-.label-title {
-  font-size: 18px;
-}
-
-.label-title::before {
-  content: "-";
-}
-
-.label-title::after {
-  content: "-";
-}
-
-::placeholder {
-  opacity: 0.3 !important;
-}
-
 ion-card {
   background-color: #254898 ;
   max-width: 500px !important;

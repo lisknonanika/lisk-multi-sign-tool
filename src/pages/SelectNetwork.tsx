@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/react';
 import Header from '../components/Header';
 import './Common.css';
-import { NETWORK, getNetworkIdentifier } from '../utils';
-import { Dispatch, SetStateAction } from 'react';
+import { SIGN_INFO, NETWORK, getNetworkIdentifier } from '../common';
 import { Redirect } from 'react-router';
 
-const SelectNetwork: React.FC<{setNetworkIdentifire: Dispatch<SetStateAction<string>>}> = ({setNetworkIdentifire}) => {
+const SelectNetwork: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
   const [status, setStatus] = useState<string>("0");
 
   const selectNetwork = async (network:string) => {
     setStatus("9");
-    const result = await getNetworkIdentifier(network);
-    if (result) {
-      setNetworkIdentifire(result);
+    const networkIdentifier = await getNetworkIdentifier(network);
+    if (networkIdentifier) {
+      signInfo.network =  network;
+      signInfo.networkIdentifier = networkIdentifier;
       setStatus("1");
     }
   }

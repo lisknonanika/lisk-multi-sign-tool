@@ -1,14 +1,4 @@
-import { assetSchemas } from './assetSchemas';
-
-export const NETWORK = {
-  MAINNET: "0",
-  TESTNET: "1"
-}
-
-const SERVICE_URL = {
-  MAINNET: "",
-  TESTNET: "https://testnet-service.lisk.io/api/v2"
-}
+import { NETWORK, SERVICE_URL, assetSchemas }  from './constants';
 
 const bigIntToString = (v:any):string => {
   const result = typeof v === 'string'? v: v.toString();
@@ -38,23 +28,23 @@ export const getAccount = async (network:string, publicKey:string):Promise<any|u
 }
 
 export const convertTransactionObject = (transactionObject:any) => {
-  transactionObject.nonce = BigInt(transactionObject.nonce.replace('n',''));
-  transactionObject.fee = BigInt(transactionObject.fee.replace('n',''));
-  transactionObject.senderPublicKey = Buffer.from(transactionObject.senderPublicKey, 'hex');
-  transactionObject.signatures = transactionObject.signatures.map((signature:string) => Buffer.from(signature, 'hex'));
+  if (typeof transactionObject.nonce === 'string') transactionObject.nonce = BigInt(transactionObject.nonce.replace('n',''));
+  if (typeof transactionObject.fee === 'string') transactionObject.fee = BigInt(transactionObject.fee.replace('n',''));
+  if (typeof transactionObject.senderPublicKey === 'string') transactionObject.senderPublicKey = Buffer.from(transactionObject.senderPublicKey, 'hex');
+  if (typeof transactionObject.signatures === 'string') transactionObject.signatures = transactionObject.signatures.map((signature:string) => Buffer.from(signature, 'hex'));
 
   switch(`${transactionObject.moduleID}:${transactionObject.assetID}`) {
     case '2:0':
-      transactionObject.asset.amount = BigInt(transactionObject.asset.amount.replace('n',''));
-      transactionObject.asset.recipientAddress = Buffer.from(transactionObject.asset.recipientAddress, 'hex');
+      if (typeof transactionObject.asset.amount === 'string') transactionObject.asset.amount = BigInt(transactionObject.asset.amount.replace('n',''));
+      if (typeof transactionObject.asset.recipientAddress === 'string') transactionObject.asset.recipientAddress = Buffer.from(transactionObject.asset.recipientAddress, 'hex');
       break;
 
     case '5:1':
     case '5:2':
       transactionObject.asset.votes = transactionObject.asset.votes.map((vote:any) => {
         return {
-          delegateAddress: Buffer.from(vote.delegateAddress, 'hex'),
-          amount: BigInt(vote.amount.replace('n',''))
+          delegateAddress: typeof vote.delegateAddress === 'string'? Buffer.from(vote.delegateAddress, 'hex'): vote.delegateAddress,
+          amount: typeof vote.amount === 'string'? BigInt(vote.amount.replace('n','')): vote.amount
         }
       });
       break;
@@ -62,7 +52,6 @@ export const convertTransactionObject = (transactionObject:any) => {
 }
 
 export const convertSignedTransaction = (signedTransaction:any) => {
-  console.log(bigIntToString("5n"))
   signedTransaction.id = Buffer.from(signedTransaction.id).toString('hex');
   signedTransaction.nonce = bigIntToString(signedTransaction.nonce);
   signedTransaction.fee = bigIntToString(signedTransaction.fee);

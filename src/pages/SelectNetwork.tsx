@@ -33,7 +33,7 @@ const SelectNetwork: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
         {status === "0"? 
           <div className="container">
             <IonCard>
-              <img src="./assets/img/home.png"></img>
+              <img src="./assets/img/selectnetwork.png" style={{objectPosition: "50% 20%"}}></img>
               <IonCardHeader>
                 <IonCardTitle>Select Network</IonCardTitle>
               </IonCardHeader>

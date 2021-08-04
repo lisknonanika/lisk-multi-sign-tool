@@ -31,7 +31,7 @@ ion-textarea {
   border-bottom: 1px solid #fff !important;
   margin-bottom: 10px !important;
   text-align: left !important;
-  min-height: 3rem !important;
+  min-height: 2.7rem !important;
   max-height: 9rem !important;
 }
 
@@ -48,9 +48,13 @@ textarea {
 
 ion-card {
   background-color: #254898 ;
-  max-width: 600px !important;
+  max-width: 500px !important;
 }
 
 ion-card img {
   background-color: #F7F9FB;
+  object-fit: cover;
+  object-position: 50% 10%;
+  width: 500px;
+  height: 200px;
 }

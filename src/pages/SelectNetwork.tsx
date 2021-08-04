@@ -1,28 +1,34 @@
-import React, { useState } from 'react';
-import { IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/react';
 import Header from '../components/Header';
 import './Common.css';
-import { SIGN_INFO, NETWORK, getNetworkIdentifier } from '../common';
+import { NETWORK_INFO, NETWORK, getNetworkIdentifier } from '../common';
 import { Redirect } from 'react-router';
 
-const SelectNetwork: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
+const SelectNetwork: React.FC<{setNetworkInfo:Dispatch<SetStateAction<NETWORK_INFO>>}> = ({setNetworkInfo}) => {
 
   const [status, setStatus] = useState<string>("0");
+  const [loading, showLoading] = useState(false);
 
-  const selectNetwork = async (network:string) => {
-    setStatus("9");
-    const networkIdentifier = await getNetworkIdentifier(network);
-    if (networkIdentifier) {
-      signInfo.network =  network;
-      signInfo.networkIdentifier = networkIdentifier;
+  const selectNetwork = async (type:string) => {
+    showLoading(true);
+    setNetworkInfo({type:"", identifier:""});
+    const identifier = await getNetworkIdentifier(type);
+    if (identifier.success) {
+      setNetworkInfo({type:type, identifier:identifier.data});
+      showLoading(false);
       setStatus("1");
+      return;
     }
+    showLoading(false);
+    alert(identifier.message);
   }
 
   return (
     <IonPage>
       <Header />
       <IonContent fullscreen>
+        <IonLoading isOpen={loading} onDidDismiss={() => showLoading(false)} message={'accessing Lisk Service...'} duration={10000} />
         {status === "0"? 
           <div className="container">
             <IonCard>
@@ -39,10 +45,7 @@ const SelectNetwork: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
         :""}
         {status === "1"?
           <Redirect to="/enterTransaction"></Redirect>
-        : ""}
-        {status === "9"?
-          <div>Now Loading</div>
-        : ""}
+        :""}
       </IonContent>
     </IonPage>
   );

@@ -1,15 +1,16 @@
 import { IonContent, IonLabel, IonPage } from '@ionic/react';
 import Header from '../components/Header';
 import './Common.css';
-import { SIGN_INFO } from '../common';
+import { NETWORK_INFO } from '../common';
 
-const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
+const EnterTransaction: React.FC<{networkInfo:NETWORK_INFO}> = ({networkInfo}) => {
 
   return (
     <IonPage>
       <Header />
       <IonContent fullscreen>
-        <IonLabel>{signInfo.networkIdentifier}</IonLabel>
+        <IonLabel>{networkInfo.type}</IonLabel>
+        <IonLabel>{networkInfo.identifier}</IonLabel>
       </IonContent>
     </IonPage>
   );

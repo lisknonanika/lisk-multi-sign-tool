@@ -6,13 +6,11 @@ export const NETWORK = {
 }
 
 export const SERVICE_URL = {
-  MAINNET: "",
+  MAINNET: "https://service.lisk.io/api/v2",
   TESTNET: "https://testnet-service.lisk.io/api/v2"
 }
 
-export interface SIGN_INFO {
-  network: string;
-  networkIdentifier: string;
-  transactionObject: any;
-  senderAccount: any;
+export interface NETWORK_INFO {
+  type: string;
+  identifier: string;
 }

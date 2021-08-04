@@ -1,21 +1,22 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
+import { Redirect } from 'react-router';
 import { IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/react';
 import Header from '../components/Header';
 import './Common.css';
-import { NETWORK_INFO, NETWORK, getNetworkIdentifier } from '../common';
-import { Redirect } from 'react-router';
+import { SIGN_INFO, NETWORK, getNetworkIdentifier } from '../common';
 
-const SelectNetwork: React.FC<{setNetworkInfo:Dispatch<SetStateAction<NETWORK_INFO>>}> = ({setNetworkInfo}) => {
-
+const SelectNetwork: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [status, setStatus] = useState<string>("0");
   const [loading, showLoading] = useState(false);
 
-  const selectNetwork = async (type:string) => {
+  const selectNetwork = async (network:string) => {
     showLoading(true);
-    setNetworkInfo({type:"", identifier:""});
-    const identifier = await getNetworkIdentifier(type);
+    signInfo.network = ""
+    signInfo.networkIdentifier = ""
+    const identifier = await getNetworkIdentifier(network);
     if (identifier.success) {
-      setNetworkInfo({type:type, identifier:identifier.data});
+      signInfo.network = network;
+      signInfo.networkIdentifier = identifier.data;
       showLoading(false);
       setStatus("1");
       return;

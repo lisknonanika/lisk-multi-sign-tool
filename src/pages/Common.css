@@ -26,9 +26,29 @@
   text-decoration: none;
 }
 
+ion-textarea {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-bottom: 1px solid #fff !important;
+  margin-bottom: 10px !important;
+  text-align: left !important;
+  min-height: 3rem !important;
+  max-height: 9rem !important;
+}
+
+textarea {
+  min-height: 2.7rem !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  color: #F7F9FB !important;
+}
+
+::placeholder {
+  color: #eee !important;
+}
+
 ion-card {
   background-color: #254898 ;
-  max-width: 500px !important;
+  max-width: 600px !important;
 }
 
 ion-card img {

@@ -3,7 +3,7 @@ export {
   NETWORK,
   SERVICE_URL
 } from './constants';
-export type { NETWORK_INFO } from './constants';
+export type { SIGN_INFO } from './constants';
 
 export * as utils from './utils';
 export {

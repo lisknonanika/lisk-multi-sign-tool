@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import SelectNetwork from './pages/SelectNetwork';
 import EnterTransaction from './pages/EnterTransaction';
-import { NETWORK_INFO } from './common'
+import { SIGN_INFO } from './common'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -26,17 +25,17 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 
 const App: React.FC = () => {
-  const [networkInfo, setNetworkInfo] = useState<NETWORK_INFO>({type:"", identifier:""});
+  const signInfo:SIGN_INFO = {network:"", networkIdentifier:"", senderAcount:undefined, transactionString:""};
 
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path="/selectNetwork">
-            <SelectNetwork setNetworkInfo={setNetworkInfo}/>
+            <SelectNetwork signInfo={signInfo}/>
           </Route>
           <Route exact path="/enterTransaction">
-            <EnterTransaction networkInfo={networkInfo}/>
+            <EnterTransaction signInfo={signInfo}/>
           </Route>
           <Route exact path="/">
             <Redirect to="/selectNetwork" />

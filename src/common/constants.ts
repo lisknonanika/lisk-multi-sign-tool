@@ -10,7 +10,9 @@ export const SERVICE_URL = {
   TESTNET: "https://testnet-service.lisk.io/api/v2"
 }
 
-export interface NETWORK_INFO {
-  type: string;
-  identifier: string;
+export interface SIGN_INFO {
+  network: string;
+  networkIdentifier: string;
+  senderAcount: any;
+  transactionString: string;
 }

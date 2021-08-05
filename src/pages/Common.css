@@ -26,15 +26,6 @@
   text-decoration: none;
 }
 
-ion-textarea {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  border-bottom: 1px solid #fff !important;
-  margin-bottom: 10px !important;
-  text-align: left !important;
-  min-height: 2.7rem !important;
-  max-height: 9rem !important;
-}
-
 textarea {
   min-height: 2.7rem !important;
   padding-left: 10px !important;
@@ -46,15 +37,59 @@ textarea {
   color: #eee !important;
 }
 
-ion-card {
-  background-color: #254898 ;
-  max-width: 500px !important;
-}
-
 ion-card img {
   background-color: #F7F9FB;
   object-fit: cover;
   object-position: 50% 10%;
   width: 500px;
   height: 200px;
+  vertical-align: middle;
+}
+
+ion-card .ion-card-body {
+  background-color: #254898;
+  max-width: 500px !important;
+  padding: 0px !important;
+}
+
+ion-card-title {
+  color: #F7F9FB !important;
+}
+
+ion-textarea {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-bottom: 1px solid #fff !important;
+  margin-bottom: 10px !important;
+  text-align: left !important;
+  min-height: 2.7rem !important;
+  max-height: 9rem !important;
+}
+
+.swal2-confirm {
+  background-color: #2c5dd1 !important;
+}
+
+.swal2-popup {
+  background-color: #f5f6f9 !important;
+}
+
+.swal2-popup button {
+  width: 80%;
+  padding: 15px;
+}
+
+@media (prefers-color-scheme: dark) {
+  ion-card img {
+    background-color: #577097;
+  }
+
+  .swal2-popup {
+    background-color: #2b3038 !important;
+  }
+  .swal2-title {
+    color: #F7F9FB !important;
+  }
+  .swal2-html-container {
+    color: #F7F9FB !important;
+  }
 }

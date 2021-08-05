@@ -7,37 +7,37 @@ const bigIntToString = (v:any):string => {
 }
 
 export const getServiceURL = (network:string):string => {
-  if (!network) return "";
+  if (!network) return '';
   return network === NETWORK.MAINNET? SERVICE_URL.MAINNET: SERVICE_URL.TESTNET;
 }
 
 export const getAssetSchema = (moduleAssetId:string):{success:boolean, message:string, data:any} => {
   const schemaInfo = assetSchemas.find((assetSchema) => assetSchema.moduleAssetId === moduleAssetId);
-  if (schemaInfo && schemaInfo.schema) return {success:true, message:"", data:schemaInfo.schema};
-  return {success:false, message:"Schema not found.", data:undefined};
+  if (schemaInfo && schemaInfo.schema) return {success:true, message:'', data:schemaInfo.schema};
+  return {success:false, message:'Schema not found.', data:undefined};
 }
 
 export const getNetworkIdentifier = async (network:string):Promise<{success:boolean, message:string, data:string}> => {
   try {
-    if (!network) return {success:false, message:"Failed to access the Lisk Service.", data:""};
+    if (!network) return {success:false, message:'Failed to access the Lisk Service.', data:''};
     const res = await fetch(`${getServiceURL(network)}/network/status`);
     const json = await res.json();
-    if (json.error) return {success:false, message:json.message, data:""};
-    if (json.data && json.data.networkIdentifier) return {success:true, message:"", data:json.data.networkIdentifier};
-    return {success:false, message:"Failed to access the Lisk Service.", data:""};
+    if (json.error) return {success:false, message:json.message, data:''};
+    if (json.data && json.data.networkIdentifier) return {success:true, message:'', data:json.data.networkIdentifier};
+    return {success:false, message:'Failed to access the Lisk Service.', data:''};
   } catch(err) {
-    return {success:false, message:err, data:""};
+    return {success:false, message:err, data:''};
   }
 }
 
 export const getAccount = async (network:string, publicKey:string):Promise<{success:boolean, message:string, data:any}> => {
   try {
-    if (!network) return {success:false, message:"Failed to access the Lisk Service.", data:undefined};
+    if (!network) return {success:false, message:'Failed to access the Lisk Service.', data:undefined};
     const res = await fetch(`${getServiceURL(network)}/accounts?publicKey=${publicKey}`);
     const json = await res.json();
     if (json.error) return {success:false, message:json.message, data:undefined};
-    if (json.data && json.data[0].summary) return {success:true, message:"", data:json.data[0]};
-    return {success:false, message:"Failed to access the Lisk Service.", data:undefined};
+    if (json.data && json.data[0].summary) return {success:true, message:'', data:json.data[0]};
+    return {success:false, message:'Failed to access the Lisk Service.', data:undefined};
   } catch(err) {
     return {success:false, message:err, data:undefined};
   }

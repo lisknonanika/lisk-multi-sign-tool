@@ -80,7 +80,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
         {status === '0'? 
           <div className='container'>
             <IonCard>
-              <img src='./assets/img/entertransaction.png' className='lisk-sticker' style={{objectPosition: '50% 5%'}}></img>
+              <div className="lisk-sticker"><img src='./assets/img/entertransaction.png' style={{objectPosition: '50% 5%'}}></img></div>
               <div className='ion-card-body'>
                 <IonCardHeader>
                   <IonCardTitle>Enter TransactionString</IonCardTitle>

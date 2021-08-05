@@ -1,13 +1,9 @@
 .container {
   text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
 	align-items: center;
 	justify-content: center;
+  height: 100%;
 }
 
 .container strong {
@@ -43,21 +39,44 @@ input[type='password'] {
   color: #eee !important;
 }
 
-ion-card img {
+.lisk-sticker img {
+  background-color: #F7F9FB;
+  object-fit: cover;
+  width: 500px;
+  height: 200px;
+  object-position: 50% 50%;
+  vertical-align: middle;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.lisk-address-icon img {
   background-color: #F7F9FB;
   object-fit: contain;
   width: 500px;
-  height: 200px;
+  height: 150px;
   vertical-align: middle;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
-ion-card img.lisk-sticker {
-  object-fit: cover;
-  object-position: 50% 50%;
-  padding-top: 0px;
-  padding-bottom: 0px;
+.signed-info {
+  padding: 5px 10px;
+  font-size: 0.7rem;
+}
+
+ion-slide {
+  padding-bottom: 20px;
+}
+
+ion-slides .swiper-pagination-bullet-active {
+  background-color: #254898 !important;
+  opacity: 1 !important;
+}
+
+ion-slides .swiper-pagination-bullet {
+  background-color: #254898;
+  opacity: 0.5;
 }
 
 ion-card .lisk-address {
@@ -112,13 +131,24 @@ ion-input {
 }
 
 @media (prefers-color-scheme: dark) {
-  ion-card img {
+  .lisk-sticker img,
+  .lisk-address-icon img {
     background-color: #2f3d64;
   }
 
   ion-card .lisk-address {
     background-color: #222e50;
     color: #F7F9FB !important;
+  }
+
+  ion-slides .swiper-pagination-bullet-active {
+    background-color: #F7F9FB !important;
+    opacity: 1 !important;
+  }
+  
+  ion-slides .swiper-pagination-bullet {
+    background-color: #F7F9FB;
+    opacity: 0.5;
   }
 
   .swal2-popup {

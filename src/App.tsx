@@ -3,6 +3,7 @@ import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import SelectNetwork from './pages/SelectNetwork';
 import EnterTransaction from './pages/EnterTransaction';
+import SignTransaction from './pages/SignTransaction';
 import { SIGN_INFO } from './common'
 
 /* Core CSS required for Ionic components to work properly */
@@ -36,6 +37,9 @@ const App: React.FC = () => {
           </Route>
           <Route exact path="/enterTransaction">
             <EnterTransaction signInfo={signInfo}/>
+          </Route>
+          <Route exact path="/signTransaction">
+            <SignTransaction signInfo={signInfo}/>
           </Route>
           <Route exact path="/">
             <Redirect to="/selectNetwork" />

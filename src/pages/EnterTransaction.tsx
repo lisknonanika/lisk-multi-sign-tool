@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router';
 import { IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonTextarea } from '@ionic/react';
 import { validateTransaction } from '@liskhq/lisk-transactions';
@@ -69,7 +69,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
     signInfo.senderAcount = senderAccount.data;
     signInfo.transactionString = text;
     showLoading(false);
-    await Swal.fire('Success', '', 'success');
+    setStatus("1");
   }
 
   return (
@@ -80,7 +80,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
         {status === '0'? 
           <div className='container'>
             <IonCard>
-              <img src='./assets/img/entertransaction.png' style={{objectPosition: '50% 5%'}}></img>
+              <img src='./assets/img/entertransaction.png' className='lisk-sticker' style={{objectPosition: '50% 5%'}}></img>
               <div className='ion-card-body'>
                 <IonCardHeader>
                   <IonCardTitle>Enter TransactionString</IonCardTitle>
@@ -94,7 +94,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
           </div>
         :''}
         {status === '1'?
-          <Redirect to='/enterTransaction'></Redirect>
+          <Redirect to='/signTransaction'></Redirect>
         :''}
       </IonContent>
     </IonPage>

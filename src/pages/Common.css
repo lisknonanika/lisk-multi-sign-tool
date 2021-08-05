@@ -33,17 +33,41 @@ textarea {
   color: #F7F9FB !important;
 }
 
+input[type='password'] {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  color: #F7F9FB !important;
+}
+
 ::placeholder {
   color: #eee !important;
 }
 
 ion-card img {
   background-color: #F7F9FB;
-  object-fit: cover;
-  object-position: 50% 10%;
+  object-fit: contain;
   width: 500px;
   height: 200px;
   vertical-align: middle;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+ion-card img.lisk-sticker {
+  object-fit: cover;
+  object-position: 50% 50%;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+ion-card .lisk-address {
+  background-color: #e8edf1;
+  color: #0C152E !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  padding: 5px 10px;
 }
 
 ion-card .ion-card-body {
@@ -52,7 +76,8 @@ ion-card .ion-card-body {
   padding: 0px !important;
 }
 
-ion-card-title {
+ion-card-title,
+ion-card-subtitle {
   color: #F7F9FB !important;
 }
 
@@ -63,6 +88,14 @@ ion-textarea {
   text-align: left !important;
   min-height: 2.7rem !important;
   max-height: 9rem !important;
+}
+
+ion-input {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-bottom: 1px solid #fff !important;
+  margin-bottom: 10px !important;
+  text-align: left !important;
+  min-height: 2.7rem !important;
 }
 
 .swal2-confirm {
@@ -80,7 +113,12 @@ ion-textarea {
 
 @media (prefers-color-scheme: dark) {
   ion-card img {
-    background-color: #577097;
+    background-color: #2f3d64;
+  }
+
+  ion-card .lisk-address {
+    background-color: #222e50;
+    color: #F7F9FB !important;
   }
 
   .swal2-popup {

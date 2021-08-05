@@ -8,6 +8,7 @@
     "@capacitor/haptics": "1.0.2",
     "@capacitor/keyboard": "1.0.2",
     "@capacitor/status-bar": "1.0.2",
+    "@emeraldpay/hashicon-react": "^0.5.1",
     "@ionic/react": "^5.5.0",
     "@ionic/react-router": "^5.5.0",
     "@liskhq/lisk-transactions": "^5.1.1",

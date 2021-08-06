@@ -16,3 +16,10 @@ export interface SIGN_INFO {
   senderAcount: any;
   transactionString: string;
 }
+
+export interface MEMBER_INFO {
+  publicKey: string;
+  address: string;
+  mandatory: boolean;
+  signed: boolean;
+}

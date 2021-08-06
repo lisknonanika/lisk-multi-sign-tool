@@ -1,77 +1,122 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
-import { IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonInput, IonSlides, IonSlide, IonFooter, IonText } from '@ionic/react';
-import { Hashicon } from '@emeraldpay/hashicon-react';
+import { useIonViewWillEnter, IonLoading, IonContent, IonPage, IonSlides, IonSlide, IonFooter, IonText, useIonViewDidEnter } from '@ionic/react';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
+import AccountCard from '../components/AccountCard';
+import { SIGN_INFO, MEMBER_INFO } from '../common';
 import './Common.css';
-import { SIGN_INFO, getAccount, getAssetSchema, convertTransactionObject } from '../common';
 
 const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
-  const [status, setStatus] = useState<string>('0');
-  const [text, setText] = useState<string>('');
   const [loading, showLoading] = useState(false);
+  const [status, setStatus] = useState('0');
+  const [signMembers, setSignMembers] = useState(new Array());
+  const [numberOfSignatures, setNumberOfSignatures] = useState({max:0, signed:0});
+  const [numberOfMandatory, setNumberOfMandatory] = useState({max:0, signed:0});
+  const [numberOfOptional, setNumberOfOptional] = useState({max:0, signed:0});
+
+  let isError = false;
+  useEffect(() => {
+    try {
+      const transactionObject = JSON.parse(signInfo.transactionString);
+      const members:Array<MEMBER_INFO> = signInfo.senderAcount.keys.members.map((member:any, index:number):MEMBER_INFO => {
+        return {
+          publicKey: member.publicKey,
+          address: member.address,
+          mandatory: member.isMandatory,
+          signed: transactionObject.signatures[index]? true: false
+        }
+      });
+      setSignMembers(members);
+
+      const signatures = {max:signInfo.senderAcount.keys.numberOfSignatures? signInfo.senderAcount.keys.numberOfSignatures: 0, signed:0};
+      const mandatory = {max:signInfo.senderAcount.keys.mandatoryKeys.length, signed:0};
+      const optional = {max:signInfo.senderAcount.keys.optionalKeys.length, signed:0};
+      transactionObject.signatures.forEach((signature:string, index:number) => {
+        if (!signature) return;
+        signatures.signed += 1;
+        if (signInfo.senderAcount.keys.members[index].isMandatory) mandatory.signed += 1;
+        else optional.signed += 1;
+      });
+      setNumberOfSignatures(signatures);
+      setNumberOfMandatory(mandatory);
+      setNumberOfOptional(optional);
+
+    } catch(err) {
+      isError = true;
+    }
+  }, []);
+
+  useIonViewDidEnter(async () => {
+    try {
+      if (isError || !signInfo || !signInfo.network || !signInfo.networkIdentifier || !signInfo.senderAcount) {
+        await Swal.fire('Error', 'Invalid move.', 'error');
+        setStatus('9');
+        return;
+      }
+      if (!signInfo.senderAcount.keys.numberOfSignatures) {
+        await Swal.fire('Error', 'Not MultiSignature Account.', 'error');
+        setStatus('9');
+        return;
+      }
+    } catch(err) {
+      await Swal.fire('Error', 'Invalid move.', 'error');
+      setStatus('9');
+      return;
+    }
+  });
 
   const slideOpts = {
     initialSlide: 0,
     speed: 400
   };
 
-  const sign = async () => {
-    await Swal.fire('Success', '', 'success');
+  const sign = async (idx:number, passphrase:string) => {
+    showLoading(true);
+    showLoading(false);
+    await Swal.fire('Success', `${idx}: ${passphrase}`, 'success');
   }
 
   return (
     <IonPage>
       <Header />
       <IonFooter className="signed-info">
-        <div><IonText>Number of Signatures: 1 / 2</IonText></div>
-        <div><IonText>Mandantory: 0 / 1</IonText>&nbsp;&nbsp;&nbsp;<IonText>Optional: 1 / 2</IonText></div>
+        <div><IonText>Number of Signatures: {numberOfSignatures.signed} / {numberOfSignatures.max}</IonText></div>
+        <div>
+          <IonText>Mandatory: {numberOfSignatures.signed} / {numberOfMandatory.max}</IonText>&nbsp;&nbsp;&nbsp;
+          <IonText>Optional: {numberOfOptional.signed} / {numberOfOptional.max}</IonText>
+        </div>
       </IonFooter>
       <IonContent fullscreen >
         <IonLoading isOpen={loading} onDidDismiss={() => showLoading(false)} message={'Checking TransactionString...'} duration={10000} />
         {status === '0'? 
           <div className='container'>
             <IonSlides pager={true} options={slideOpts}>
-              <IonSlide>
-                <IonCard>
-                  <div className="lisk-address-icon"><Hashicon value="69561bcc5c764dc24f2d1b53472cb10e3ea42753906b4fb9ae5981e1605d43ed" size={500} /></div>
-                  <div className='lisk-address'>lskysdevwuzkpjav7q8umak8nn68n5sd6xx5j7cys</div>
-                  <div className='ion-card-body'>
-                    <IonCardHeader>
-                      <IonCardSubtitle>- Mandantory Key -</IonCardSubtitle>
-                      <IonCardTitle>Enter Passphrase</IonCardTitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                      <IonInput type="password" placeholder="Enter Passphrase"/>
-                      <IonButton onClick={async() => await sign()} expand='block' size='large'>Sign</IonButton>
-                    </IonCardContent>
-                  </div>
-                </IonCard>
-              </IonSlide>
-
-              <IonSlide>
-                <IonCard>
-                  <div className="lisk-address-icon"><Hashicon value="ac879b1e1fdb58d3c1c1be5bfb9dc4b772e0d96167ec137aef4a15d10fc9f4ff" size={500} /></div>
-                  <div className='lisk-address'>lskaaaejcz2o4nk457s8exboadfv4ddtuh6w2amgv</div>
-                  <div className='ion-card-body'>
-                    <IonCardHeader>
-                      <IonCardSubtitle>- Optional Key -</IonCardSubtitle>
-                      <IonCardTitle>Enter Passphrase</IonCardTitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                      <IonInput type="password" placeholder="Enter Passphrase"/>
-                      <IonButton onClick={async() => await sign()} expand='block' size='large'>Sign</IonButton>
-                    </IonCardContent>
-                  </div>
-                </IonCard>
-              </IonSlide>
+            {
+              signMembers.map((member:any, index:number) => {
+                return (
+                  <IonSlide key={member.publicKey}>
+                    <AccountCard
+                      sign={sign}
+                      member={
+                        {
+                          publicKey: member.publicKey,
+                          address: member.address,
+                          mandatory: member.isMandatory,
+                          signed: JSON.parse(signInfo.transactionString).signatures[index]? true: false
+                        }
+                      }
+                      index={index} />
+                  </IonSlide>
+                );
+              })
+            }
             </IonSlides>
           </div>
-        :''}
-        {status === '1'?
+        : ''}
+        {status === '9'? 
           <Redirect to='/selectNetwork'></Redirect>
-        :''}
+        : ''}
       </IonContent>
     </IonPage>
   );

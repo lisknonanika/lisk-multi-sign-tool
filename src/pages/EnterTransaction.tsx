@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
-import { IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonTextarea } from '@ionic/react';
+import { useIonViewWillEnter, useIonViewDidEnter, IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonTextarea } from '@ionic/react';
 import { validateTransaction } from '@liskhq/lisk-transactions';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
@@ -11,6 +11,14 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [status, setStatus] = useState<string>('0');
   const [text, setText] = useState<string>('');
   const [loading, showLoading] = useState(false);
+  
+  useIonViewDidEnter(async () => {
+     if (!signInfo || !signInfo.network || !signInfo.networkIdentifier) {
+      await Swal.fire('Error', 'Invalid move.', 'error');
+      setStatus('9');
+      return;
+    }
+  })
 
   const startSign = async () => {
     showLoading(true);
@@ -46,6 +54,17 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
     if (!senderAccount.success) {
       showLoading(false);
       await Swal.fire('Error', `Invalid TransactionString. (${senderAccount.message})`, 'error');
+      return;
+    }
+    try {
+      if (!senderAccount.data.keys.numberOfSignatures) {
+        showLoading(false);
+        await Swal.fire('Error', `Invalid TransactionString. (Not MultiSignature Account)`, 'error');
+        return;
+      }
+    } catch(err) {
+      showLoading(false);
+      await Swal.fire('Error', `Invalid TransactionString. (Not MultiSignature Account)`, 'error');
       return;
     }
 
@@ -96,6 +115,9 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
         {status === '1'?
           <Redirect to='/signTransaction'></Redirect>
         :''}
+        {status === '9'? 
+          <Redirect to='/selectNetwork'></Redirect>
+        : ''}
       </IonContent>
     </IonPage>
   );

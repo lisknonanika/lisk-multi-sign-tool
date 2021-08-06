@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
-import { useIonViewWillEnter, IonLoading, IonContent, IonPage, IonSlides, IonSlide, IonFooter, IonText, useIonViewDidEnter } from '@ionic/react';
+import { IonLoading, IonContent, IonPage, IonSlides, IonSlide, IonFooter, IonText, useIonViewDidEnter } from '@ionic/react';
+import { validateTransaction, signMultiSignatureTransaction } from '@liskhq/lisk-transactions';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
 import AccountCard from '../components/AccountCard';
-import { SIGN_INFO, MEMBER_INFO } from '../common';
+import { SIGN_INFO, MEMBER_INFO, getAssetSchema, convertTransactionObject, convertSignedTransaction } from '../common';
 import './Common.css';
 
 const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
@@ -73,8 +74,54 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
   const sign = async (idx:number, passphrase:string) => {
     showLoading(true);
-    showLoading(false);
-    await Swal.fire('Success', `${idx}: ${passphrase}`, 'success');
+    const transactionObject = JSON.parse(signInfo.transactionString);
+
+    // get assetAchema
+    const assetSchema = getAssetSchema(`${transactionObject.moduleID}:${transactionObject.assetID}`);
+    if (!assetSchema.success) {
+      showLoading(false);
+      await Swal.fire('Error', assetSchema.message, 'error');
+      return;
+    }
+
+    // transactionObject convert
+    convertTransactionObject(transactionObject);
+
+    try {
+      validateTransaction(assetSchema.data, transactionObject);
+    } catch(err) {
+      showLoading(false);
+      await Swal.fire('Error', 'Invalid TransactionString. (Schema validation error)', 'error');
+      return;
+    }
+  
+    try {
+      const keys = {
+        mandatoryKeys: signInfo.senderAcount.keys.mandatoryKeys.map((key:string) => Buffer.from(key, 'hex')),
+        optionalKeys: signInfo.senderAcount.keys.optionalKeys.map((key:string) => Buffer.from(key, 'hex'))
+      }
+  
+      const signedTransaction = signMultiSignatureTransaction(
+        assetSchema.data,
+        transactionObject,
+        Buffer.from(signInfo.networkIdentifier, 'hex'),
+        passphrase,
+        keys,
+        false
+      )
+      
+      // convert signTransaction
+      convertSignedTransaction(signedTransaction);
+      signInfo.transactionString = JSON.stringify(signedTransaction);
+
+      showLoading(false);
+      await Swal.fire('Success', signInfo.transactionString, 'success');
+  
+    } catch (err) {
+      showLoading(false);
+      await Swal.fire('Error', '', 'error');
+      return;
+    }
   }
 
   return (
@@ -96,17 +143,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
               signMembers.map((member:any, index:number) => {
                 return (
                   <IonSlide key={member.publicKey}>
-                    <AccountCard
-                      sign={sign}
-                      member={
-                        {
-                          publicKey: member.publicKey,
-                          address: member.address,
-                          mandatory: member.isMandatory,
-                          signed: JSON.parse(signInfo.transactionString).signatures[index]? true: false
-                        }
-                      }
-                      index={index} />
+                    <AccountCard sign={sign} member={member} index={index} />
                   </IonSlide>
                 );
               })
@@ -116,6 +153,9 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
         : ''}
         {status === '9'? 
           <Redirect to='/selectNetwork'></Redirect>
+        : ''}
+        {status === '99'? 
+          <Redirect to='/signTransaction'></Redirect>
         : ''}
       </IonContent>
     </IonPage>

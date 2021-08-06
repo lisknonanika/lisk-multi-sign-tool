@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
-import { useIonViewWillEnter, useIonViewDidEnter, IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonTextarea } from '@ionic/react';
+import { useIonViewDidEnter, IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonTextarea } from '@ionic/react';
 import { validateTransaction } from '@liskhq/lisk-transactions';
 import Swal from 'sweetalert2';
 import Header from '../components/Header';
@@ -79,7 +79,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
     // validate Transaction
     convertTransactionObject(transactionObject);
     try {
-      validateTransaction(assetSchema, transactionObject);
+      validateTransaction(assetSchema.data, transactionObject);
     } catch(err) {
       showLoading(false);
       await Swal.fire('Error', 'Invalid TransactionString. (Schema validation error)', 'error');

@@ -47,7 +47,7 @@ export const convertTransactionObject = (transactionObject:any) => {
   if (typeof transactionObject.nonce === 'string') transactionObject.nonce = BigInt(transactionObject.nonce.replace('n',''));
   if (typeof transactionObject.fee === 'string') transactionObject.fee = BigInt(transactionObject.fee.replace('n',''));
   if (typeof transactionObject.senderPublicKey === 'string') transactionObject.senderPublicKey = Buffer.from(transactionObject.senderPublicKey, 'hex');
-  if (typeof transactionObject.signatures === 'string') transactionObject.signatures = transactionObject.signatures.map((signature:string) => Buffer.from(signature, 'hex'));
+  transactionObject.signatures = transactionObject.signatures.map((signature:string) => typeof signature === 'string'? Buffer.from(signature, 'hex'): signature);
 
   switch(`${transactionObject.moduleID}:${transactionObject.assetID}`) {
     case '2:0':

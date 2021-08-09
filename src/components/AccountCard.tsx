@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { IonButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonInput } from '@ionic/react';
+import { IonButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonInput, IonText, IonIcon } from '@ionic/react';
+import { checkmarkCircleOutline } from 'ionicons/icons';
 import { Hashicon } from '@emeraldpay/hashicon-react';
 import { MEMBER_INFO } from '../common';
 
@@ -13,12 +14,26 @@ const AccountCard: React.FC<{sign:any, member:MEMBER_INFO, index:number}> = ({si
       <div className='ion-card-body'>
         <IonCardHeader>
           <IonCardSubtitle>- {member.mandatory? "Mandatory": "Optional"} Key -</IonCardSubtitle>
-          <IonCardTitle>Enter Passphrase</IonCardTitle>
+          {member.signed?
+            <IonCardTitle>
+              <IonIcon icon={checkmarkCircleOutline}></IonIcon>
+              <IonText>Signed</IonText>
+            </IonCardTitle>
+          :
+            <IonCardTitle>Enter Passphrase</IonCardTitle>
+          }
         </IonCardHeader>
-        <IonCardContent>
-          <IonInput type="password" placeholder="Enter Passphrase" onIonChange={e => setText(e.detail.value!)}/>
-          <IonButton onClick={async() => await sign(index, text)} expand='block' size='large'>Sign</IonButton>
-        </IonCardContent>
+        {member.signed?
+          <IonCardContent>
+            <IonInput type="password" value='' placeholder="Signed" disabled={true} />
+            <IonButton expand='block' size='large' disabled={true} >Sign</IonButton>
+          </IonCardContent>
+          :
+          <IonCardContent>
+            <IonInput type="password" value={text} placeholder="Enter Passphrase" onIonChange={e => setText(e.detail.value!)}/>
+            <IonButton onClick={async() => await sign(index, text)} expand='block' size='large'>Sign</IonButton>
+          </IonCardContent>
+        }
       </div>
     </IonCard>
   )

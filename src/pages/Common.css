@@ -100,6 +100,13 @@ ion-card-subtitle {
   color: #F7F9FB !important;
 }
 
+ion-card-title ion-icon {
+  position:absolute;
+  top: 2px;
+  left: calc(50% - 55px);
+  color: rgb(43, 172, 97);
+}
+
 ion-textarea {
   background-color: rgba(255, 255, 255, 0.15) !important;
   border-bottom: 1px solid #fff !important;

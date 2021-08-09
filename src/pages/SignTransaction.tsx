@@ -10,6 +10,7 @@ import './Common.css';
 
 const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [loading, showLoading] = useState(false);
+  const [count, setCount] = useState(0);
   const [status, setStatus] = useState('0');
   const [signMembers, setSignMembers] = useState(new Array());
   const [numberOfSignatures, setNumberOfSignatures] = useState({max:0, signed:0});
@@ -17,7 +18,33 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [numberOfOptional, setNumberOfOptional] = useState({max:0, signed:0});
 
   let isError = false;
-  useEffect(() => {
+  useEffect(() => { update() }, [count]);
+
+  useIonViewDidEnter(async () => {
+    try {
+      if (isError || !signInfo || !signInfo.network || !signInfo.networkIdentifier || !signInfo.senderAcount) {
+        await Swal.fire('Error', 'Invalid move.', 'error');
+        setStatus('9');
+        return;
+      }
+      if (!signInfo.senderAcount.keys.numberOfSignatures) {
+        await Swal.fire('Error', 'Not MultiSignature Account.', 'error');
+        setStatus('9');
+        return;
+      }
+    } catch(err) {
+      await Swal.fire('Error', 'Invalid move.', 'error');
+      setStatus('9');
+      return;
+    }
+  });
+
+  const slideOpts = {
+    initialSlide: 0,
+    speed: 400
+  };
+
+  const update = async () => {
     try {
       const transactionObject = JSON.parse(signInfo.transactionString);
       const members:Array<MEMBER_INFO> = signInfo.senderAcount.keys.members.map((member:any, index:number):MEMBER_INFO => {
@@ -46,31 +73,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
     } catch(err) {
       isError = true;
     }
-  }, []);
-
-  useIonViewDidEnter(async () => {
-    try {
-      if (isError || !signInfo || !signInfo.network || !signInfo.networkIdentifier || !signInfo.senderAcount) {
-        await Swal.fire('Error', 'Invalid move.', 'error');
-        setStatus('9');
-        return;
-      }
-      if (!signInfo.senderAcount.keys.numberOfSignatures) {
-        await Swal.fire('Error', 'Not MultiSignature Account.', 'error');
-        setStatus('9');
-        return;
-      }
-    } catch(err) {
-      await Swal.fire('Error', 'Invalid move.', 'error');
-      setStatus('9');
-      return;
-    }
-  });
-
-  const slideOpts = {
-    initialSlide: 0,
-    speed: 400
-  };
+  }
 
   const sign = async (idx:number, passphrase:string) => {
     showLoading(true);
@@ -115,6 +118,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
       signInfo.transactionString = JSON.stringify(signedTransaction);
 
       showLoading(false);
+      setCount(count + 1);
       await Swal.fire('Success', signInfo.transactionString, 'success');
   
     } catch (err) {

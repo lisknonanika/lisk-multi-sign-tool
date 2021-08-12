@@ -105,7 +105,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
                   <IonCardTitle>Enter TransactionString</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  <IonTextarea value={text} placeholder='Enter TransactionString' rows={1} autoGrow={true} autofocus={true} onIonChange={e => setText(e.detail.value!)}/>
+                  <IonTextarea value={text} placeholder='Enter TransactionString' rows={1} autoGrow={true} onIonChange={e => setText(e.detail.value!)}/>
                   <IonButton onClick={async() => await startSign()} expand='block' size='large'>Start Sign</IonButton>
                 </IonCardContent>
               </div>

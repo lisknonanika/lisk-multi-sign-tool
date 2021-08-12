@@ -4,8 +4,9 @@
   "private": true,
   "dependencies": {
     "@capacitor/app": "1.0.2",
-    "@capacitor/core": "3.1.2",
+    "@capacitor/core": "^3.1.2",
     "@capacitor/haptics": "1.0.2",
+    "@capacitor/ios": "^3.1.2",
     "@capacitor/keyboard": "1.0.2",
     "@capacitor/status-bar": "1.0.2",
     "@emeraldpay/hashicon-react": "^0.5.1",
@@ -24,6 +25,7 @@
     "@types/react-router-dom": "^5.1.7",
     "ionicons": "^5.4.0",
     "react": "^17.0.1",
+    "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
@@ -70,7 +72,8 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "3.1.2"
+    "@capacitor/cli": "^3.1.2",
+    "@types/react-copy-to-clipboard": "^5.0.1"
   },
   "description": "An Ionic project"
 }

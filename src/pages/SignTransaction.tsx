@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
-import { IonLoading, IonContent, IonPage, IonSlides, IonSlide, IonFooter, IonText, useIonViewDidEnter, IonIcon, IonButtons, IonButton } from '@ionic/react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { IonLoading, IonContent, IonPage, IonSlides, IonSlide, IonFooter, IonText, useIonViewDidEnter, IonIcon, IonButtons, IonButton, IonRouterLink } from '@ionic/react';
 import { copy, mail, chatboxEllipsesOutline } from 'ionicons/icons';
 import { validateTransaction, signMultiSignatureTransaction } from '@liskhq/lisk-transactions';
 import { getAddressAndPublicKeyFromPassphrase } from '@liskhq/lisk-cryptography';
@@ -21,6 +22,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [numberOfOptional, setNumberOfOptional] = useState({max:0, signed:0});
   const MySwal = withReactContent(Swal);
   let isError = false;
+  useEffect(() => { update() }, []);
   useEffect(() => { update() }, [count]);
 
   useIonViewDidEnter(async () => {
@@ -46,6 +48,23 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
     initialSlide: 0,
     speed: 400
   };
+
+  const showTransactionString = async () => {
+    await MySwal.fire({
+      title: 'TransactionString',
+      icon: 'info',
+      html:
+        <div>
+          <textarea rows={5} readOnly={true} value={signInfo.transactionString} />
+          <IonButtons>
+            <CopyToClipboard text={signInfo.transactionString} onCopy={async() => {await Swal.fire('Copied', '', 'success'); await showTransactionString();}}>
+              <IonButton expand='block'><IonIcon icon={copy}/>&nbsp;copy</IonButton>
+            </CopyToClipboard>
+            <IonButton expand='block'><IonIcon icon={mail}/>&nbsp;mail</IonButton>
+          </IonButtons>
+        </div>
+    });
+  }
 
   const update = async () => {
     try {
@@ -142,7 +161,9 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
           <div>
             <textarea rows={5} readOnly={true} value={signInfo.transactionString} />
             <IonButtons>
-              <IonButton expand='block'><IonIcon icon={copy}/>&nbsp;copy</IonButton>
+              <CopyToClipboard text={signInfo.transactionString} onCopy={async() => {await Swal.fire('Copied', '', 'success'); await showTransactionString();}}>
+                <IonButton expand='block'><IonIcon icon={copy}/>&nbsp;copy</IonButton>
+              </CopyToClipboard>
               <IonButton expand='block'><IonIcon icon={mail}/>&nbsp;mail</IonButton>
             </IonButtons>
           </div>
@@ -158,12 +179,14 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   return (
     <IonPage>
       <Header type={1} url={'/enterTransaction'} />
-      <IonFooter className="signed-info">
-        <div><IonText>Number of Signatures: {numberOfSignatures.signed} / {numberOfSignatures.max}</IonText></div>
-        <div>
-          <IonText>Mandatory: {numberOfMandatory.signed} / {numberOfMandatory.max}</IonText>&nbsp;&nbsp;&nbsp;
-          <IonText>Optional: {numberOfOptional.signed} / {numberOfOptional.max}</IonText>
-          <IonIcon icon={chatboxEllipsesOutline} />
+      <IonFooter>
+        <IonRouterLink onClick={() => showTransactionString()}><IonIcon icon={chatboxEllipsesOutline} /></IonRouterLink>
+        <div className="signed-info">
+          <div><IonText>Number of Signatures: {numberOfSignatures.signed} / {numberOfSignatures.max}</IonText></div>
+          <div>
+            <IonText>Mandatory: {numberOfMandatory.signed} / {numberOfMandatory.max}</IonText>&nbsp;&nbsp;&nbsp;
+            <IonText>Optional: {numberOfOptional.signed} / {numberOfOptional.max}</IonText>
+          </div>
         </div>
       </IonFooter>
       <IonContent fullscreen >

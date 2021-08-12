@@ -4,7 +4,7 @@ import { checkmarkCircleOutline } from 'ionicons/icons';
 import { Hashicon } from '@emeraldpay/hashicon-react';
 import { MEMBER_INFO } from '../common';
 
-const AccountCard: React.FC<{sign:any, member:MEMBER_INFO, index:number}> = ({sign, member, index}) => {
+const AccountCard: React.FC<{sign:any, member:MEMBER_INFO}> = ({sign, member}) => {
   const [text, setText] = useState<string>('');
 
   return (
@@ -31,7 +31,7 @@ const AccountCard: React.FC<{sign:any, member:MEMBER_INFO, index:number}> = ({si
           :
           <IonCardContent>
             <IonInput type="password" value={text} placeholder="Enter Passphrase" onIonChange={e => setText(e.detail.value!)}/>
-            <IonButton onClick={async() => await sign(index, text)} expand='block' size='large'>Sign</IonButton>
+            <IonButton onClick={async() => await sign(member.publicKey, text)} expand='block' size='large'>Sign</IonButton>
           </IonCardContent>
         }
       </div>

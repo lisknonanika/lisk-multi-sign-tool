@@ -65,6 +65,13 @@ input[type='password'] {
   font-size: 0.7rem;
 }
 
+ion-footer ion-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  font-size: 2rem;
+}
+
 ion-slide {
   padding-bottom: 25px;
 }
@@ -113,7 +120,7 @@ ion-textarea {
   margin-bottom: 10px !important;
   text-align: left !important;
   min-height: 2.7rem !important;
-  max-height: 9rem !important;
+  max-height: 6rem !important;
 }
 
 ion-input {

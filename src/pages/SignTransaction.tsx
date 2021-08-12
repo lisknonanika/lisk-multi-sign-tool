@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
-import { IonLoading, IonContent, IonPage, IonSlides, IonSlide, IonFooter, IonText, useIonViewDidEnter } from '@ionic/react';
+import { IonLoading, IonContent, IonPage, IonSlides, IonSlide, IonFooter, IonText, useIonViewDidEnter, IonIcon, IonButtons, IonButton } from '@ionic/react';
+import { copy, mail, chatboxEllipsesOutline } from 'ionicons/icons';
 import { validateTransaction, signMultiSignatureTransaction } from '@liskhq/lisk-transactions';
+import { getAddressAndPublicKeyFromPassphrase } from '@liskhq/lisk-cryptography';
 import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content'
 import Header from '../components/Header';
 import AccountCard from '../components/AccountCard';
 import { SIGN_INFO, MEMBER_INFO, getAssetSchema, convertTransactionObject, convertSignedTransaction } from '../common';
@@ -16,7 +19,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [numberOfSignatures, setNumberOfSignatures] = useState({max:0, signed:0});
   const [numberOfMandatory, setNumberOfMandatory] = useState({max:0, signed:0});
   const [numberOfOptional, setNumberOfOptional] = useState({max:0, signed:0});
-
+  const MySwal = withReactContent(Swal);
   let isError = false;
   useEffect(() => { update() }, [count]);
 
@@ -75,8 +78,22 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
     }
   }
 
-  const sign = async (idx:number, passphrase:string) => {
+  const sign = async (publicKey:string, passphrase:string) => {
     showLoading(true);
+
+    passphrase = passphrase.trim();
+    if (!passphrase) {
+      showLoading(false);
+      await Swal.fire('Error', 'Required passphrase.', 'error');
+      return;
+    }
+
+    if (publicKey !== getAddressAndPublicKeyFromPassphrase(passphrase).publicKey.toString('hex')) {
+      showLoading(false);
+      await Swal.fire('Error', 'Incorrect passphrase.', 'error');
+      return;
+    }
+
     const transactionObject = JSON.parse(signInfo.transactionString);
 
     // get assetAchema
@@ -118,7 +135,18 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
       showLoading(false);
       setCount(count + 1);
-      await Swal.fire('Success', `<textarea rows='10' readonly>${signInfo.transactionString}</textarea>`, 'success');
+      await MySwal.fire({
+        title: 'Success',
+        icon: 'success',
+        html:
+          <div>
+            <textarea rows={5} readOnly={true} value={signInfo.transactionString} />
+            <IonButtons>
+              <IonButton expand='block'><IonIcon icon={copy}/>&nbsp;copy</IonButton>
+              <IonButton expand='block'><IonIcon icon={mail}/>&nbsp;mail</IonButton>
+            </IonButtons>
+          </div>
+      });
   
     } catch (err) {
       showLoading(false);
@@ -133,8 +161,9 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
       <IonFooter className="signed-info">
         <div><IonText>Number of Signatures: {numberOfSignatures.signed} / {numberOfSignatures.max}</IonText></div>
         <div>
-          <IonText>Mandatory: {numberOfSignatures.signed} / {numberOfMandatory.max}</IonText>&nbsp;&nbsp;&nbsp;
+          <IonText>Mandatory: {numberOfMandatory.signed} / {numberOfMandatory.max}</IonText>&nbsp;&nbsp;&nbsp;
           <IonText>Optional: {numberOfOptional.signed} / {numberOfOptional.max}</IonText>
+          <IonIcon icon={chatboxEllipsesOutline} />
         </div>
       </IonFooter>
       <IonContent fullscreen >
@@ -143,10 +172,10 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
           <div className='container'>
             <IonSlides pager={true} options={slideOpts}>
             {
-              signMembers.map((member:any, index:number) => {
+              signMembers.map((member:any) => {
                 return (
                   <IonSlide key={member.publicKey}>
-                    <AccountCard sign={sign} member={member} index={index} />
+                    <AccountCard sign={sign} member={member} />
                   </IonSlide>
                 );
               })

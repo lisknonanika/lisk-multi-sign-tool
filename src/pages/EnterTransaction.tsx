@@ -93,7 +93,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
   return (
     <IonPage>
-      <Header />
+      <Header type={1} url={'/selectNetwork'}/>
       <IonContent fullscreen>
         <IonLoading isOpen={loading} onDidDismiss={() => showLoading(false)} message={'Checking TransactionString...'} duration={10000} />
         {status === '0'? 
@@ -112,12 +112,8 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
             </IonCard>
           </div>
         :''}
-        {status === '1'?
-          <Redirect to='/signTransaction'></Redirect>
-        :''}
-        {status === '9'? 
-          <Redirect to='/selectNetwork'></Redirect>
-        : ''}
+        {status === '1'? <Redirect to='/signTransaction'></Redirect>: ''}
+        {status === '9'? <Redirect to='/selectNetwork'></Redirect>: ''}
       </IonContent>
     </IonPage>
   );

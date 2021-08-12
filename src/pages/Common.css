@@ -103,7 +103,7 @@ ion-card-subtitle {
 ion-card-title ion-icon {
   position:absolute;
   top: 2px;
-  left: calc(50% - 55px);
+  left: calc(50% - 80px);
   color: rgb(43, 172, 97);
 }
 
@@ -135,6 +135,11 @@ ion-input {
 .swal2-popup button {
   width: 80%;
   padding: 15px;
+}
+
+.swal2-popup textarea {
+  resize: none;
+  width: 100%;
 }
 
 @media (prefers-color-scheme: dark) {

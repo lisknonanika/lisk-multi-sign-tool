@@ -29,7 +29,7 @@ const SelectNetwork: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
   return (
     <IonPage>
-      <Header />
+      <Header type={0} url={''}/>
       <IonContent fullscreen>
         <IonLoading isOpen={loading} onDidDismiss={() => showLoading(false)} message={'accessing Lisk Service...'} duration={10000} />
         {status === '0'? 
@@ -48,9 +48,7 @@ const SelectNetwork: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
             </IonCard>
           </div>
         :''}
-        {status === '1'?
-          <Redirect to='/enterTransaction'></Redirect>
-        :''}
+        {status === '1'? <Redirect to='/enterTransaction'></Redirect>: ''}
       </IonContent>
     </IonPage>
   );

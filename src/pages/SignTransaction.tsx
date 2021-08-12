@@ -89,7 +89,6 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
     // transactionObject convert
     convertTransactionObject(transactionObject);
-
     try {
       validateTransaction(assetSchema.data, transactionObject);
     } catch(err) {
@@ -119,7 +118,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
       showLoading(false);
       setCount(count + 1);
-      await Swal.fire('Success', signInfo.transactionString, 'success');
+      await Swal.fire('Success', `<textarea rows='10' readonly>${signInfo.transactionString}</textarea>`, 'success');
   
     } catch (err) {
       showLoading(false);
@@ -130,7 +129,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
   return (
     <IonPage>
-      <Header />
+      <Header type={1} url={'/enterTransaction'} />
       <IonFooter className="signed-info">
         <div><IonText>Number of Signatures: {numberOfSignatures.signed} / {numberOfSignatures.max}</IonText></div>
         <div>
@@ -154,13 +153,8 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
             }
             </IonSlides>
           </div>
-        : ''}
-        {status === '9'? 
-          <Redirect to='/selectNetwork'></Redirect>
-        : ''}
-        {status === '99'? 
-          <Redirect to='/signTransaction'></Redirect>
-        : ''}
+        :''}
+        {status === '9'? <Redirect to='/selectNetwork'></Redirect>: ''}
       </IonContent>
     </IonPage>
   );

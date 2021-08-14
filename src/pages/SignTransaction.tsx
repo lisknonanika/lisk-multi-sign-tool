@@ -7,9 +7,7 @@ import { validateTransaction, signMultiSignatureTransaction } from '@liskhq/lisk
 import { getAddressAndPublicKeyFromPassphrase } from '@liskhq/lisk-cryptography';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
-import Header from '../components/Header';
-import AccountCard from '../components/AccountCard';
-import SummaryCard from '../components/SummaryCard';
+import { Header, AccountCard, SummaryCard } from '../components';
 import { SIGN_INFO, MEMBER_INFO, getAssetSchema, convertTransactionObject, convertSignedTransaction } from '../common';
 import './Common.css';
 

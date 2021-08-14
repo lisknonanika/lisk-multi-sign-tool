@@ -3,9 +3,9 @@ import { Redirect } from 'react-router';
 import { useIonViewDidEnter, IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonTextarea } from '@ionic/react';
 import { validateTransaction } from '@liskhq/lisk-transactions';
 import Swal from 'sweetalert2';
-import Header from '../components/Header';
-import './Common.css';
+import { Header } from '../components';
 import { SIGN_INFO, getAccount, getAssetSchema, convertTransactionObject } from '../common';
+import './Common.css';
 
 const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [status, setStatus] = useState<string>('0');

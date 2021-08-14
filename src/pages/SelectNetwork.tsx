@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router';
 import { IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/react';
 import Swal from 'sweetalert2';
-import Header from '../components/Header';
-import './Common.css';
+import { Header } from '../components';
 import { SIGN_INFO, NETWORK, getNetworkIdentifier } from '../common';
+import './Common.css';
 
 const SelectNetwork: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [status, setStatus] = useState<string>('0');

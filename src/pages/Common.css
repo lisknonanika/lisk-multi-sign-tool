@@ -70,13 +70,6 @@ ion-button {
   font-size: 1.1rem;
 }
 
-ion-footer ion-icon {
-  position: absolute;
-  bottom: 5px;
-  right: 15px;
-  font-size: 2rem;
-}
-
 ion-slide {
   padding-bottom: 25px;
 }
@@ -172,24 +165,14 @@ ion-input {
   font-weight: bold;
   font-size: 0.8rem;
   padding: 5px;
-  margin-bottom: 10px;
 }
 
-.swal2-popup .content-link {
-  position: relative;
-  font-weight: bold;
-  font-size: 0.8rem;
-  padding: 5px;
-}
-
-.swal2-popup .content-item ion-icon,
-.swal2-popup .content-link ion-icon {
+.swal2-popup .content-item ion-icon {
   position: absolute;
   top: 0.4rem;
 }
 
-.swal2-popup .content-item ion-router-link,
-.swal2-popup .content-link ion-router-link {
+.swal2-popup .content-item ion-router-link {
   padding-left: 0.8rem;
 }
 

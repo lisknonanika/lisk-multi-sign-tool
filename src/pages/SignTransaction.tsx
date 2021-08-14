@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { IonLoading, IonContent, IonPage, IonSlides, IonSlide, useIonViewDidEnter, IonIcon, IonButtons, IonButton } from '@ionic/react';
-import { copy, mail } from 'ionicons/icons';
+import { IonLoading, IonContent, IonPage, IonSlides, IonSlide, useIonViewDidEnter } from '@ionic/react';
 import { validateTransaction, signMultiSignatureTransaction } from '@liskhq/lisk-transactions';
 import { getAddressAndPublicKeyFromPassphrase } from '@liskhq/lisk-cryptography';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
-import { Header, AccountCard, SummaryCard } from '../components';
+import { Header, AccountCard, SummaryCard, TransactionPopup } from '../components';
 import { SIGN_INFO, MEMBER_INFO, getAssetSchema, convertTransactionObject, convertSignedTransaction } from '../common';
 import './Common.css';
 
@@ -21,7 +19,6 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [numberOfOptional, setNumberOfOptional] = useState({max:0, signed:0});
   const MySwal = withReactContent(Swal);
   let isError = false;
-  useEffect(() => { update() }, []);
   useEffect(() => { update() }, [count]);
 
   useIonViewDidEnter(async () => {
@@ -41,27 +38,20 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
       setStatus('9');
       return;
     }
+    update();
   });
 
   const slideOpts = {
     initialSlide: 0,
-    speed: 400
+    speed: 400,
+    loop: true
   };
 
   const showTransaction = async () => {
     await MySwal.fire({
       title: 'Transaction',
       icon: 'info',
-      html:
-        <div>
-          <textarea rows={5} readOnly={true} value={signInfo.transactionString} />
-          <IonButtons>
-            <CopyToClipboard text={signInfo.transactionString} onCopy={async() => {await Swal.fire('Copied', '', 'success'); await showTransaction();}}>
-              <IonButton expand='block'><IonIcon icon={copy}/>&nbsp;copy</IonButton>
-            </CopyToClipboard>
-            <IonButton expand='block'><IonIcon icon={mail}/>&nbsp;mail</IonButton>
-          </IonButtons>
-        </div>
+      html: <TransactionPopup transactionString={signInfo.transactionString} showTransaction={showTransaction} />
     });
   }
 
@@ -154,16 +144,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
       await MySwal.fire({
         title: 'Success',
         icon: 'success',
-        html:
-          <div>
-            <textarea rows={5} readOnly={true} value={signInfo.transactionString} />
-            <IonButtons>
-              <CopyToClipboard text={signInfo.transactionString} onCopy={async() => {await Swal.fire('Copied', '', 'success'); await showTransaction();}}>
-                <IonButton expand='block'><IonIcon icon={copy}/>&nbsp;copy</IonButton>
-              </CopyToClipboard>
-              <IonButton expand='block'><IonIcon icon={mail}/>&nbsp;mail</IonButton>
-            </IonButtons>
-          </div>
+        html: <TransactionPopup transactionString={signInfo.transactionString} showTransaction={showTransaction} />
       });
   
     } catch (err) {

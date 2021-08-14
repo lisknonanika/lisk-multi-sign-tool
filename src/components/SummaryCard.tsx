@@ -1,7 +1,6 @@
 import { IonButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/react';
 
 const SummaryCard: React.FC<{showTransaction:any, signStatus:any}> = ({showTransaction, signStatus}) => {
-
   return (
     <IonCard>
       <div className="lisk-sticker"><img src='./assets/img/summarycard.png' style={{objectPosition: '50% 45%'}}></img></div>

@@ -65,8 +65,9 @@ input[type='password'] {
   padding: 10px 20px;
 }
 
-ion-footer {
-  padding-bottom: var(--ion-safe-area-bottom,0) !important;
+ion-button {
+  margin-top: 15px;
+  font-size: 1.1rem;
 }
 
 ion-footer ion-icon {
@@ -88,6 +89,22 @@ ion-slides .swiper-pagination-bullet-active {
 ion-slides .swiper-pagination-bullet {
   background-color: #254898;
   opacity: 0.5;
+}
+
+ion-card .content-item {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #F7F9FB;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+ion-card .content-subitem {
+  color: #F7F9FB;
+  text-align: center;
+  font-size: 0.8rem;
+  padding: 5px;
 }
 
 ion-card .lisk-address {

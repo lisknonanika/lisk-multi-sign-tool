@@ -42,7 +42,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   });
 
   const slideOpts = {
-    initialSlide: 0,
+    initialSlide: 1,
     speed: 400,
     loop: true
   };

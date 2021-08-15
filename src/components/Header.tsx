@@ -17,7 +17,7 @@ const Header: React.FC<{type:number, url:string}> = ({type, url}) => {
         <div className='content-item' style={{paddingTop:'0px', marginBottom:'10px'}}>
           <IonRouterLink href='https://lisk.com/what-is-lisk' target='_blank'>Lean more</IonRouterLink>
         </div>
-        <div className='content-title'>- Develop & Support & -</div>
+        <div className='content-title'>- Develop & Support -</div>
         <div className='content-item' style={{marginBottom:'10px'}}>
           <IonIcon icon={logoTwitter} />&nbsp;
           <IonRouterLink href='https://twitter.com/ys_mdmg' target='_blank'>@ys_mdmg</IonRouterLink>

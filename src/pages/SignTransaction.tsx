@@ -43,8 +43,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
   const slideOpts = {
     initialSlide: 1,
-    speed: 400,
-    loop: true
+    speed: 400
   };
 
   const showTransaction = async () => {

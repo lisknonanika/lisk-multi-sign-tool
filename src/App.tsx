@@ -4,7 +4,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import SelectNetwork from './pages/SelectNetwork';
 import EnterTransaction from './pages/EnterTransaction';
 import SignTransaction from './pages/SignTransaction';
-import { SIGN_INFO } from './common'
+import { SIGN_INFO, SIGN_STATUS } from './common'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -26,7 +26,19 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 
 const App: React.FC = () => {
-  const signInfo:SIGN_INFO = {network:"", networkIdentifier:"", senderAcount:undefined, transactionString:""};
+  const signInfo:SIGN_INFO = {
+    network:"",
+    networkIdentifier:"",
+    senderAcount:undefined,
+    transactionString:""
+  };
+
+  const signStatus:SIGN_STATUS = {
+    members:new Array(),
+    signatures:{max:0, signed:0},
+    mandatory:{max:0, signed:0},
+    optional:{max:0, signed:0}
+  };
 
   return (
     <IonApp>
@@ -36,10 +48,10 @@ const App: React.FC = () => {
             <SelectNetwork signInfo={signInfo}/>
           </Route>
           <Route exact path="/enterTransaction">
-            <EnterTransaction signInfo={signInfo}/>
+            <EnterTransaction signInfo={signInfo} signStatus={signStatus}/>
           </Route>
           <Route exact path="/signTransaction">
-            <SignTransaction signInfo={signInfo}/>
+            <SignTransaction signInfo={signInfo} signStatus={signStatus} />
           </Route>
           <Route exact path="/">
             <Redirect to="/selectNetwork" />

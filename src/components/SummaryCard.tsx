@@ -1,6 +1,7 @@
 import { IonButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle } from '@ionic/react';
+import { SIGN_STATUS } from '../common';
 
-const SummaryCard: React.FC<{showTransaction:any, signStatus:any}> = ({showTransaction, signStatus}) => {
+const SummaryCard: React.FC<{signStatus:SIGN_STATUS, showTransaction:any}> = ({signStatus, showTransaction}) => {
   return (
     <IonCard>
       <div className="lisk-sticker"><img src='./assets/img/summarycard.png' style={{objectPosition: '50% 45%'}}></img></div>
@@ -10,7 +11,7 @@ const SummaryCard: React.FC<{showTransaction:any, signStatus:any}> = ({showTrans
         </IonCardHeader>
         <IonCardContent>
           <div className='content-item'>Number of required signatures</div>
-          <div className='content-subitem'>{signStatus.signature.max}</div>
+          <div className='content-subitem'>{signStatus.signatures.max}</div>
           <div className='content-item'>
             <div>Number of signed signatures</div>
             <div>(signed / max)</div>
@@ -20,7 +21,7 @@ const SummaryCard: React.FC<{showTransaction:any, signStatus:any}> = ({showTrans
             &nbsp;&nbsp;
             Optional: {signStatus.optional.signed} / {signStatus.optional.max}
           </div>
-          <IonButton onClick={async() => await showTransaction()} expand='block' size='large'>Show transaction</IonButton>
+          <IonButton onClick={async() => await showTransaction()} expand='block' size='large'>Show Transaction</IonButton>
         </IonCardContent>
       </div>
     </IonCard>

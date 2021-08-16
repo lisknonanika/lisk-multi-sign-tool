@@ -6,20 +6,18 @@ import { getAddressAndPublicKeyFromPassphrase } from '@liskhq/lisk-cryptography'
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
 import { Header, AccountCard, SummaryCard, TransactionPopup } from '../components';
-import { SIGN_INFO, MEMBER_INFO, getAssetSchema, convertTransactionObject, convertSignedTransaction } from '../common';
+import { SIGN_INFO, SIGN_STATUS, getAssetSchema, convertTransactionObject, convertSignedTransaction, updateSignStatus } from '../common';
 import './Common.css';
 
-const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
+const SignTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> = ({signInfo, signStatus}) => {
   const [loading, showLoading] = useState(false);
-  const [count, setCount] = useState(0);
   const [status, setStatus] = useState('0');
-  const [signMembers, setSignMembers] = useState(new Array());
-  const [numberOfSignatures, setNumberOfSignatures] = useState({max:0, signed:0});
-  const [numberOfMandatory, setNumberOfMandatory] = useState({max:0, signed:0});
-  const [numberOfOptional, setNumberOfOptional] = useState({max:0, signed:0});
   const MySwal = withReactContent(Swal);
   let isError = false;
-  useEffect(() => { update() }, [count]);
+
+  useEffect(() => {
+    if (status === '1') setStatus('0');
+  }, [status]);
 
   useIonViewDidEnter(async () => {
     try {
@@ -33,16 +31,16 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
         setStatus('9');
         return;
       }
+      setStatus('1');
     } catch(err) {
       await Swal.fire('Error', 'Invalid move.', 'error');
       setStatus('9');
       return;
     }
-    update();
   });
 
   const slideOpts = {
-    initialSlide: 1,
+    initialSlide: 0,
     speed: 400
   };
 
@@ -52,37 +50,6 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
       icon: 'info',
       html: <TransactionPopup transactionString={signInfo.transactionString} showTransaction={showTransaction} />
     });
-  }
-
-  const update = async () => {
-    try {
-      const transactionObject = JSON.parse(signInfo.transactionString);
-      const members:Array<MEMBER_INFO> = signInfo.senderAcount.keys.members.map((member:any, index:number):MEMBER_INFO => {
-        return {
-          publicKey: member.publicKey,
-          address: member.address,
-          mandatory: member.isMandatory,
-          signed: transactionObject.signatures[index]? true: false
-        }
-      });
-      setSignMembers(members);
-
-      const signatures = {max:signInfo.senderAcount.keys.numberOfSignatures? signInfo.senderAcount.keys.numberOfSignatures: 0, signed:0};
-      const mandatory = {max:signInfo.senderAcount.keys.mandatoryKeys.length, signed:0};
-      const optional = {max:signInfo.senderAcount.keys.optionalKeys.length, signed:0};
-      transactionObject.signatures.forEach((signature:string, index:number) => {
-        if (!signature) return;
-        signatures.signed += 1;
-        if (signInfo.senderAcount.keys.members[index].isMandatory) mandatory.signed += 1;
-        else optional.signed += 1;
-      });
-      setNumberOfSignatures(signatures);
-      setNumberOfMandatory(mandatory);
-      setNumberOfOptional(optional);
-
-    } catch(err) {
-      isError = true;
-    }
   }
 
   const sign = async (publicKey:string, passphrase:string) => {
@@ -138,13 +105,19 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
       convertSignedTransaction(signedTransaction);
       signInfo.transactionString = JSON.stringify(signedTransaction);
 
+      if (!updateSignStatus(signInfo, signStatus)) {
+        showLoading(false);
+        await Swal.fire('Error', 'Failed Sign.', 'error');
+        return;
+      }
+      
       showLoading(false);
-      setCount(count + 1);
       await MySwal.fire({
         title: 'Success',
         icon: 'success',
         html: <TransactionPopup transactionString={signInfo.transactionString} showTransaction={showTransaction} />
       });
+      setStatus('1');
   
     } catch (err) {
       showLoading(false);
@@ -162,10 +135,10 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
           <div className='container'>
             <IonSlides pager={true} options={slideOpts}>
               <IonSlide key={"summary"}>
-                <SummaryCard showTransaction={showTransaction} signStatus={{signature:numberOfSignatures, mandatory:numberOfMandatory, optional:numberOfOptional}} />
+                <SummaryCard signStatus={signStatus} showTransaction={showTransaction} />
               </IonSlide>
             {
-              signMembers.map((member:any) => {
+              signStatus.members.map((member:any) => {
                 return (
                   <IonSlide key={member.publicKey}>
                     <AccountCard sign={sign} member={member} />

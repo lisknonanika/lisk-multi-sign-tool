@@ -17,6 +17,13 @@ export interface SIGN_INFO {
   transactionString: string;
 }
 
+export interface SIGN_STATUS {
+  members: Array<MEMBER_INFO>;
+  signatures: {max:number, signed:number};
+  mandatory: {max:number, signed:number};
+  optional: {max:number, signed:number};
+}
+
 export interface MEMBER_INFO {
   publicKey: string;
   address: string;

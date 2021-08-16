@@ -3,7 +3,7 @@ export {
   NETWORK,
   SERVICE_URL
 } from './constants';
-export type { SIGN_INFO, MEMBER_INFO } from './constants';
+export type { SIGN_INFO, SIGN_STATUS, MEMBER_INFO } from './constants';
 
 export * as utils from './utils';
 export {
@@ -12,5 +12,6 @@ export {
   getAccount,
   getAssetSchema,
   getNetworkIdentifier,
-  getServiceURL
+  getServiceURL,
+  updateSignStatus
 } from './utils';

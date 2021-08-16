@@ -1,4 +1,5 @@
 import { NETWORK, SERVICE_URL, assetSchemas }  from './constants';
+import { SIGN_INFO, SIGN_STATUS, MEMBER_INFO } from '../common'
 
 const bigIntToString = (v:any):string => {
   const result = typeof v === 'string'? v: v.toString();
@@ -90,5 +91,37 @@ export const convertSignedTransaction = (signedTransaction:any) => {
         }
       });
       break;
+  }
+}
+
+export const updateSignStatus = (signInfo:SIGN_INFO, signStatus:SIGN_STATUS):boolean => {
+  try {
+    const transactionObject = JSON.parse(signInfo.transactionString);
+    const members:Array<MEMBER_INFO> = signInfo.senderAcount.keys.members.map((member:any, index:number):MEMBER_INFO => {
+      return {
+        publicKey: member.publicKey,
+        address: member.address,
+        mandatory: member.isMandatory,
+        signed: transactionObject.signatures[index]? true: false
+      }
+    });
+    signStatus.members = members;
+
+    const signatures = {max:signInfo.senderAcount.keys.numberOfSignatures? signInfo.senderAcount.keys.numberOfSignatures: 0, signed:0};
+    const mandatory = {max:signInfo.senderAcount.keys.mandatoryKeys.length, signed:0};
+    const optional = {max:signInfo.senderAcount.keys.optionalKeys.length, signed:0};
+    transactionObject.signatures.forEach((signature:string, index:number) => {
+      if (!signature) return;
+      signatures.signed += 1;
+      if (signInfo.senderAcount.keys.members[index].isMandatory) mandatory.signed += 1;
+      else optional.signed += 1;
+    });
+    signStatus.signatures = signatures;
+    signStatus.mandatory = mandatory;
+    signStatus.optional = optional;
+    return true;
+
+  } catch(err) {
+    return false;
   }
 }

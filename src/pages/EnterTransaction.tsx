@@ -4,10 +4,10 @@ import { useIonViewDidEnter, IonLoading, IonContent, IonButton, IonPage, IonCard
 import { validateTransaction } from '@liskhq/lisk-transactions';
 import Swal from 'sweetalert2';
 import { Header } from '../components';
-import { SIGN_INFO, getAccount, getAssetSchema, convertTransactionObject } from '../common';
+import { SIGN_INFO, SIGN_STATUS, getAccount, getAssetSchema, convertTransactionObject, updateSignStatus } from '../common';
 import './Common.css';
 
-const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
+const EnterTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> = ({signInfo, signStatus}) => {
   const [status, setStatus] = useState<string>('0');
   const [text, setText] = useState<string>('');
   const [loading, showLoading] = useState(false);
@@ -18,7 +18,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
       setStatus('9');
       return;
     }
-  })
+  });
 
   const startSign = async () => {
     showLoading(true);
@@ -87,6 +87,13 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
     }
     signInfo.senderAcount = senderAccount.data;
     signInfo.transactionString = text;
+
+    if (!updateSignStatus(signInfo, signStatus)) {
+      await Swal.fire('Error', 'Invalid TransactionString.', 'error');
+      showLoading(false);
+      setStatus("0");
+      return;
+    }
     showLoading(false);
     setStatus("1");
   }

@@ -89,7 +89,7 @@ ion-card .content-item {
   color: #F7F9FB;
   text-align: center;
   font-weight: bold;
-  padding: 5px;
+  padding: 5px 3px;
   border-radius: 5px;
 }
 
@@ -118,12 +118,12 @@ ion-card .ion-card-body {
 
 ion-card-title,
 ion-card-subtitle {
+  position: relative;
   color: #F7F9FB !important;
 }
 
 ion-card-title ion-icon {
   position:absolute;
-  top: 2px;
   left: calc(50% - 80px);
   color: rgb(43, 172, 97);
 }

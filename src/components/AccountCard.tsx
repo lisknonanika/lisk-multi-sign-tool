@@ -14,14 +14,7 @@ const AccountCard: React.FC<{sign:any, member:MEMBER_INFO}> = ({sign, member}) =
       <div className='ion-card-body'>
         <IonCardHeader>
           <IonCardSubtitle>- {member.mandatory? "Mandatory": "Optional"} Key -</IonCardSubtitle>
-          {member.signed?
-            <IonCardTitle>
-              <IonIcon icon={checkmarkCircleOutline}></IonIcon>
-              <IonText>Signed</IonText>
-            </IonCardTitle>
-          :
-            <IonCardTitle>Enter Passphrase</IonCardTitle>
-          }
+          {member.signed? <IonCardTitle><IonIcon icon={checkmarkCircleOutline} />Signed</IonCardTitle>: <IonCardTitle>Enter Passphrase</IonCardTitle>}
         </IonCardHeader>
         {member.signed?
           <IonCardContent>

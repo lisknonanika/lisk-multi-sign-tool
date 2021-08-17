@@ -124,7 +124,7 @@ ion-card-subtitle {
 
 ion-card-title ion-icon {
   position:absolute;
-  left: calc(50% - 80px);
+  left: calc(50% - 2.8em);
   color: rgb(43, 172, 97);
 }
 

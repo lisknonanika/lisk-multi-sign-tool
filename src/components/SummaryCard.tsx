@@ -13,16 +13,7 @@ const SummaryCard: React.FC<{signStatus:SIGN_STATUS, showTransaction:any}> = ({s
       <div className='ion-card-body'>
         <IonCardHeader>
           <IonCardSubtitle>Signed Status</IonCardSubtitle>
-          {mandatoryRemain <= 0 && optionalRemail <= 0?
-            <IonCardTitle>
-              <IonIcon icon={checkmarkCircleOutline} style={{left: 'calc(50% - 85px)'}}></IonIcon>
-              <IonText>Enough</IonText>
-            </IonCardTitle>
-            :
-            <IonCardTitle>
-              <IonText>Not Enough</IonText>
-            </IonCardTitle>
-          }
+          {mandatoryRemain <= 0 && optionalRemail <= 0? <IonCardTitle><IonIcon icon={checkmarkCircleOutline} style={{left:'calc(50% - 3em)'}}/>Enough</IonCardTitle>: <IonCardTitle>Not Enough</IonCardTitle>}
         </IonCardHeader>
         <IonCardContent>
           <div className='content-item'>Remain:{mandatoryRemain <= 0? optionalRemail: mandatoryRemain + optionalRemail}&nbsp;&nbsp;Signed:{signStatus.mandatory.signed + signStatus.optional.signed}&nbsp;&nbsp;Max:{signStatus.signatures.max}</div>

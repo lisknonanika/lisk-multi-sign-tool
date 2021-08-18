@@ -47,15 +47,9 @@ const Header: React.FC<{type:number, url:string}> = ({type, url}) => {
           :''}
         </IonButtons>
         <IonButtons slot='end'>
-        {type === 1?
-          <IonButton routerLink='/selectNetwork' routerDirection='none'>
-            <IonIcon icon={home} slot='icon-only'></IonIcon>
-          </IonButton>
-        :
           <IonButton onClick={() => information()}>
             <IonIcon icon={informationCircle} slot='icon-only'></IonIcon>
           </IonButton>
-        }
         </IonButtons>
         <IonTitle>Lisk Multi Sign Tool</IonTitle>
       </IonToolbar>

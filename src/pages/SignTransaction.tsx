@@ -6,10 +6,10 @@ import { getAddressAndPublicKeyFromPassphrase } from '@liskhq/lisk-cryptography'
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
 import { Header, AccountCard, SummaryCard, TransactionPopup } from '../components';
-import { SIGN_INFO, SIGN_STATUS, getAssetSchema, convertTransactionObject, convertSignedTransaction, updateSignStatus } from '../common';
+import { SIGN_INFO, getAssetSchema, convertTransactionObject, convertSignedTransaction, updateSignStatus } from '../common';
 import './Common.css';
 
-const SignTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> = ({signInfo, signStatus}) => {
+const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [loading, showLoading] = useState(false);
   const [status, setStatus] = useState('0');
   const MySwal = withReactContent(Swal);
@@ -105,7 +105,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> = 
       convertSignedTransaction(signedTransaction);
       signInfo.transactionString = JSON.stringify(signedTransaction);
 
-      if (!updateSignStatus(signInfo, signStatus)) {
+      if (!updateSignStatus(signInfo)) {
         showLoading(false);
         await Swal.fire('Error', 'Failed Sign.', 'error');
         return;
@@ -135,13 +135,13 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> = 
           <div className='container'>
             <IonSlides pager={true} options={slideOpts}>
               <IonSlide key={"summary"}>
-                <SummaryCard signStatus={signStatus} showTransaction={showTransaction} />
+                <SummaryCard signStatus={signInfo.status} showTransaction={showTransaction} />
               </IonSlide>
             {
-              signStatus.members.map((member:any) => {
+              signInfo.members.map((member:any) => {
                 return (
                   <IonSlide key={member.publicKey}>
-                    <AccountCard sign={sign} member={member} />
+                    <AccountCard member={member} sign={sign} />
                   </IonSlide>
                 );
               })
@@ -149,7 +149,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> = 
             </IonSlides>
           </div>
         :''}
-        {status === '9'? <Redirect to='/selectNetwork'></Redirect>: ''}
+        {status === '9'? <Redirect to='/enterTransaction'></Redirect>: ''}
       </IonContent>
     </IonPage>
   );

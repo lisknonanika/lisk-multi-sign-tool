@@ -1,24 +1,17 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
-import { useIonViewDidEnter, IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonTextarea } from '@ionic/react';
+import { IonLoading, IonContent, IonButton, IonPage, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonTextarea, IonToggle } from '@ionic/react';
 import { validateTransaction } from '@liskhq/lisk-transactions';
 import Swal from 'sweetalert2';
 import { Header } from '../components';
-import { SIGN_INFO, SIGN_STATUS, getAccount, getAssetSchema, convertTransactionObject, updateSignStatus } from '../common';
+import { SIGN_INFO, NETWORK, getNetworkIdentifier, getAccount, getAssetSchema, convertTransactionObject, updateSignStatus } from '../common';
 import './Common.css';
 
-const EnterTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> = ({signInfo, signStatus}) => {
+const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
   const [status, setStatus] = useState<string>('0');
   const [text, setText] = useState<string>('');
+  const [network, setNetwork] = useState<string>('0');
   const [loading, showLoading] = useState(false);
-  
-  useIonViewDidEnter(async () => {
-     if (!signInfo || !signInfo.network || !signInfo.networkIdentifier) {
-      await Swal.fire('Error', 'Invalid move.', 'error');
-      setStatus('9');
-      return;
-    }
-  });
 
   const startSign = async () => {
     showLoading(true);
@@ -30,6 +23,15 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> =
       await Swal.fire('Error', 'Required TransactionString', 'error');
       return;
     }
+
+    const identifier = await getNetworkIdentifier(network);
+    if (!identifier.success) {
+      showLoading(false);
+      await Swal.fire('Error', `Failed to access the Lisk service (${network === NETWORK.MAINNET?'Mainnet':'Testnet'}).`, 'error');
+      return;
+    }
+    signInfo.network = network;
+    signInfo.networkIdentifier = identifier.data;
 
     // parse Transaction
     let transactionObject;
@@ -77,7 +79,6 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> =
     }
 
     // validate Transaction
-    convertTransactionObject(transactionObject);
     try {
       validateTransaction(assetSchema.data, transactionObject);
     } catch(err) {
@@ -88,7 +89,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> =
     signInfo.senderAcount = senderAccount.data;
     signInfo.transactionString = text;
 
-    if (!updateSignStatus(signInfo, signStatus)) {
+    if (!updateSignStatus(signInfo)) {
       await Swal.fire('Error', 'Invalid TransactionString.', 'error');
       showLoading(false);
       setStatus("0");
@@ -100,11 +101,11 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> =
 
   return (
     <IonPage>
-      <Header type={1} url={'/selectNetwork'}/>
+      <Header type={0} url={''}/>
       <IonContent fullscreen>
         <IonLoading isOpen={loading} onDidDismiss={() => showLoading(false)} message={'Checking TransactionString...'} duration={10000} />
         {status === '0'? 
-          <div className='container'>
+          <div className='container' style={{flexFlow: 'column'}}>
             <IonCard>
               <div className="lisk-sticker"><img src='./assets/img/entertransaction.png' style={{objectPosition: '50% 5%'}}></img></div>
               <div className='ion-card-body'>
@@ -117,10 +118,10 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO, signStatus:SIGN_STATUS}> =
                 </IonCardContent>
               </div>
             </IonCard>
+            <div className='row-item select-network'>Use Testnet<IonToggle mode={'ios'} onIonChange={(e) => setNetwork(e.detail.checked? NETWORK.TESTNET: NETWORK.MAINNET)}/></div>
           </div>
         :''}
         {status === '1'? <Redirect to='/signTransaction'></Redirect>: ''}
-        {status === '9'? <Redirect to='/selectNetwork'></Redirect>: ''}
       </IonContent>
     </IonPage>
   );

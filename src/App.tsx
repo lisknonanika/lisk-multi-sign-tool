@@ -1,10 +1,9 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import SelectNetwork from './pages/SelectNetwork';
 import EnterTransaction from './pages/EnterTransaction';
 import SignTransaction from './pages/SignTransaction';
-import { SIGN_INFO, SIGN_STATUS } from './common'
+import { SIGN_INFO } from './common'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -30,31 +29,27 @@ const App: React.FC = () => {
     network:"",
     networkIdentifier:"",
     senderAcount:undefined,
-    transactionString:""
-  };
-
-  const signStatus:SIGN_STATUS = {
+    transactionString:"",
     members:new Array(),
-    signatures:{max:0, signed:0},
-    mandatory:{max:0, signed:0},
-    optional:{max:0, signed:0}
+    status: {
+      signatures:{max:0, signed:0},
+      mandatory:{max:0, signed:0},
+      optional:{max:0, signed:0}
+    }
   };
 
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/selectNetwork">
-            <SelectNetwork signInfo={signInfo}/>
-          </Route>
           <Route exact path="/enterTransaction">
-            <EnterTransaction signInfo={signInfo} signStatus={signStatus}/>
+            <EnterTransaction signInfo={signInfo}/>
           </Route>
           <Route exact path="/signTransaction">
-            <SignTransaction signInfo={signInfo} signStatus={signStatus} />
+            <SignTransaction signInfo={signInfo} />
           </Route>
           <Route exact path="/">
-            <Redirect to="/selectNetwork" />
+            <Redirect to="/enterTransaction" />
           </Route>
         </IonRouterOutlet>
       </IonReactRouter>

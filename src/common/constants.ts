@@ -15,16 +15,17 @@ export interface SIGN_INFO {
   networkIdentifier: string;
   senderAcount: any;
   transactionString: string;
+  members: Array<SIGN_MEMBER>;
+  status:SIGN_STATUS;
 }
 
 export interface SIGN_STATUS {
-  members: Array<MEMBER_INFO>;
   signatures: {max:number, signed:number};
   mandatory: {max:number, signed:number};
   optional: {max:number, signed:number};
 }
 
-export interface MEMBER_INFO {
+export interface SIGN_MEMBER {
   publicKey: string;
   address: string;
   mandatory: boolean;

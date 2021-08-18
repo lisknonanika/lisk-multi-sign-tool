@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonText, IonIcon } from '@ionic/react';
+import { IonButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon } from '@ionic/react';
 import { checkmarkCircleOutline } from 'ionicons/icons';
 import { SIGN_STATUS } from '../common';
 
@@ -13,7 +13,7 @@ const SummaryCard: React.FC<{signStatus:SIGN_STATUS, showTransaction:any}> = ({s
       <div className='ion-card-body'>
         <IonCardHeader>
           <IonCardSubtitle>Signed Status</IonCardSubtitle>
-          {mandatoryRemain <= 0 && optionalRemail <= 0? <IonCardTitle><IonIcon icon={checkmarkCircleOutline} style={{left:'calc(50% - 3em)'}}/>Enough</IonCardTitle>: <IonCardTitle>Not Enough</IonCardTitle>}
+          <IonCardTitle>{mandatoryRemain <= 0 && optionalRemail <= 0? <div className='row-item' style={{marginLeft: '-1em'}}><IonIcon icon={checkmarkCircleOutline} />Enough</div>: <div>Not Enough</div>}</IonCardTitle>
         </IonCardHeader>
         <IonCardContent>
           <div className='content-item'>Remain:{mandatoryRemain <= 0? optionalRemail: mandatoryRemain + optionalRemail}&nbsp;&nbsp;Signed:{signStatus.mandatory.signed + signStatus.optional.signed}&nbsp;&nbsp;Max:{signStatus.signatures.max}</div>

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { IonButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonInput, IonText, IonIcon } from '@ionic/react';
+import { IonButton, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonInput, IonIcon } from '@ionic/react';
 import { checkmarkCircleOutline } from 'ionicons/icons';
 import { Hashicon } from '@emeraldpay/hashicon-react';
-import { MEMBER_INFO } from '../common';
+import { SIGN_MEMBER } from '../common';
 
-const AccountCard: React.FC<{sign:any, member:MEMBER_INFO}> = ({sign, member}) => {
+const AccountCard: React.FC<{member:SIGN_MEMBER, sign:any}> = ({member, sign}) => {
   const [text, setText] = useState<string>('');
 
   return (
@@ -14,7 +14,7 @@ const AccountCard: React.FC<{sign:any, member:MEMBER_INFO}> = ({sign, member}) =
       <div className='ion-card-body'>
         <IonCardHeader>
           <IonCardSubtitle>- {member.mandatory? "Mandatory": "Optional"} Key -</IonCardSubtitle>
-          {member.signed? <IonCardTitle><IonIcon icon={checkmarkCircleOutline} />Signed</IonCardTitle>: <IonCardTitle>Enter Passphrase</IonCardTitle>}
+          <IonCardTitle>{member.signed? <div className='row-item' style={{marginLeft: '-1em'}}><IonIcon icon={checkmarkCircleOutline} />Signed</div>: <div>Enter Passphrase</div>}</IonCardTitle>
         </IonCardHeader>
         {member.signed?
           <IonCardContent>

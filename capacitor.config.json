@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "lisk-multi-sign-tool",
+  "appId": "work.ysdev.lisk_multi_sign_tool",
+  "appName": "Lisk Multi Sign Tool",
   "webDir": "build",
   "bundledWebRuntime": false
 }

@@ -48,7 +48,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
     await MySwal.fire({
       title: 'Transaction',
       icon: 'info',
-      html: <TransactionPopup transactionString={signInfo.transactionString} showTransaction={showTransaction} />
+      html: <TransactionPopup transactionString={signInfo.transactionString} />
     });
   }
 
@@ -115,7 +115,7 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
       await MySwal.fire({
         title: 'Success',
         icon: 'success',
-        html: <TransactionPopup transactionString={signInfo.transactionString} showTransaction={showTransaction} />
+        html: <TransactionPopup transactionString={signInfo.transactionString} />
       });
       setStatus('1');
   

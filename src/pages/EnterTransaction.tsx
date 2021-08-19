@@ -80,6 +80,7 @@ const EnterTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
 
     // validate Transaction
     try {
+      convertTransactionObject(transactionObject);
       validateTransaction(assetSchema.data, transactionObject);
     } catch(err) {
       showLoading(false);

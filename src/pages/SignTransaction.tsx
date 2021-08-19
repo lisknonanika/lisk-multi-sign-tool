@@ -79,8 +79,8 @@ const SignTransaction: React.FC<{signInfo:SIGN_INFO}> = ({signInfo}) => {
     }
 
     // transactionObject convert
-    convertTransactionObject(transactionObject);
     try {
+      convertTransactionObject(transactionObject);
       validateTransaction(assetSchema.data, transactionObject);
     } catch(err) {
       showLoading(false);
